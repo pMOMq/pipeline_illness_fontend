@@ -51,63 +51,12 @@
         </DataItem>
       </el-col>
     </el-row>
-    <el-row :gutter="5">
-      <el-col :xs="24" :sm="12" :md="6" class="item-wrapper">
-        <el-select
-          v-model="value"
-          class="m-2"
-          placeholder="Select"
-          size="large"
-          @click="getYears"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :xs="24" :sm="12" :md="6" class="item-wrapper">
-        <el-select
-          v-model="value"
-          class="m-2"
-          placeholder="Select"
-          size="large"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :xs="24" :sm="12" :md="6" class="item-wrapper">
-        <el-select
-          v-model="value"
-          class="m-2"
-          placeholder="Select"
-          size="large"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-      </el-col>
-    </el-row>
     <el-row :gutter="5" class="margin-top-sm">
       <el-col :span="24">
         <FullYearSalesChart ref="fullYearSalesChart" />
       </el-col>
     </el-row>
-    <el-row :gutter="5" class="margin-top-sm">
+    <!-- <el-row :gutter="5" class="margin-top-sm">
       <el-col :xs="24" :sm="24" :md="6">
         <div class="flex flex-direction">
           <SalesChart ref="salesChart" />
@@ -123,7 +72,7 @@
           <DepartmentChart ref="departmentChart" class="margin-top-xs" />
         </div>
       </el-col>
-    </el-row>
+    </el-row> -->
   </div>
 </template>
 
@@ -145,9 +94,7 @@ import {
   watch,
 } from "@vue/runtime-core";
 import { useLayoutStore } from "@/layouts/hooks";
-import { get, Response } from "@/api/http";
-import { getYear } from "@/api/url";
-import { ElMessage } from "element-plus";
+
 
 export default defineComponent({
   name: "Home",
@@ -184,19 +131,6 @@ export default defineComponent({
         fullYearSalesChart.value?.updateChart();
       }, 500);
     };
-     const getYears = () => {
-      get({
-        url: getYear,
-        data: {
-        },
-      })
-        .then(({ data }: Response) => {
-          console.log(data)
-        })
-        .catch((error) => {
-          ElMessage.error(error.message);
-        });
-    };
     const collapse = computed(() => {
       return layoutStore.state.isCollapse;
     });
@@ -212,13 +146,6 @@ export default defineComponent({
       schoolChart,
       studentChart,
       fullYearSalesChart,
-      getYears,
-      options: [
-        {
-          value: "Option1",
-          label: "Option1",
-        },
-      ],
       dataList: [
         {
           title: "今日访问量",

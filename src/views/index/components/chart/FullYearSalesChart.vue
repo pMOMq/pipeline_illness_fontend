@@ -17,11 +17,62 @@
         :body-style="{ padding: 0 }"
         shadow="never"
       >
-        <template #header>
-          <div class="text-bold">
-            全年销售额分析图（数据为模拟，只为演示效果）
-          </div>
-        </template>
+        <!-- <template #header> -->
+        <div class="text-bold">
+           &nbsp;病害数量统计
+        </div>
+        <el-row :gutter="5">
+          <!-- <el-col :xs="24" :sm="12" :md="6" class="item-wrapper"> -->
+          <el-select
+            v-model="value"
+            class="m-2"
+            placeholder="年度"
+            size="large"
+            @click="getYears"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+          <!-- </el-col>
+        <el-col :xs="24" :sm="12" :md="6" class="item-wrapper"> -->
+          <el-select
+            v-model="value"
+            class="m-2"
+            placeholder="所属分公司"
+            size="large"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+          <!-- </el-col>
+        <el-col :xs="24" :sm="12" :md="6" class="item-wrapper"> -->
+          <el-select
+            v-model="value"
+            class="m-2"
+            placeholder="病害类型"
+            size="large"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+          <!-- </el-col> -->
+        </el-row>
+        <!-- </template> -->
         <div ref="fullYearSalesChart" class="chart-item"></div>
       </el-card>
     </template>
@@ -37,7 +88,22 @@ import {
   ref,
 } from "vue";
 import { dispose, graphic } from "echarts";
+import { get, Response } from "@/api/http";
+import { getYear } from "@/api/url";
+import { ElMessage } from "element-plus";
 import { random } from "lodash";
+const getYears = () => {
+  get({
+    url: getYear,
+    data: {},
+  })
+    .then(({ data }: Response) => {
+      console.log(data);
+    })
+    .catch((error) => {
+      ElMessage.error(error.message);
+    });
+};
 const months = [
   "一月",
   "二月",
@@ -174,6 +240,13 @@ export default defineComponent({
       loading,
       fullYearSalesChart,
       updateChart,
+      getYears,
+      options: [
+        {
+          value: "Option1",
+          label: "Option1",
+        },
+      ],
     };
   },
 });
@@ -182,9 +255,17 @@ export default defineComponent({
 <style lang="scss" scoped>
 .chart-item-container {
   width: 100%;
-  height: 400px;
+  height: 445px;
   .chart-item {
     height: 345px;
   }
+}
+.text-bold {
+  border-left: 4px solid #2381d8;
+  font-weight: bold;
+  margin-left:20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size:16px
 }
 </style>
