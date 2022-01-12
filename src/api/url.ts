@@ -1,4 +1,4 @@
-export const baseAddress = "http://localhost:8080";
+export const baseAddress = "http://124.70.37.65:8000";
 
 export const test = "/test";
 
@@ -31,4 +31,6 @@ export const getUserList = "/getUserList";
 export const getCardList = "/getCardList";
 
 export const getCommentList = "/getCommentList";
+
+export const getYear = "/tongji/getYearsCondition/";
 

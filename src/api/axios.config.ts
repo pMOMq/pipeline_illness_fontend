@@ -1,7 +1,7 @@
 import Axios, { AxiosResponse } from "axios";
 import qs from "qs";
 
-const baseIp = "http://localhost:8080/";
+const baseIp = "http://124.70.37.65:8000/";
 
 export const CONTENT_TYPE = "Content-Type";
 
@@ -13,7 +13,7 @@ export const APPLICATION_JSON = "application/json; charset=UTF-8";
 export const TEXT_PLAIN = "text/plain; charset=UTF-8";
 
 const service = Axios.create({
-  baseURL: baseIp,
+  baseURL: '/api',
   timeout: 10 * 60 * 1000,
   withCredentials: true, // 跨域请求时发送cookie
 });
@@ -36,6 +36,8 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => {
+    // eslint-disable-next-line no-debugger
+    debugger;
     if (response.status === 200) {
       return response;
     } else {

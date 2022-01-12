@@ -1,35 +1,20 @@
 <template>
-  <el-skeleton
-    :loading="loading"
-    animated
-  >
+  <el-skeleton :loading="loading" animated>
     <template #template>
       <el-card>
-        <el-skeleton-item
-          variant="h3"
-          style="width: 50%"
-        />
+        <el-skeleton-item variant="h3" style="width: 50%" />
         <div class="margin-top">
           <el-skeleton-item variant="text" />
-          <el-skeleton-item
-            variant="text"
-            class="margin-top"
-          />
-          <el-skeleton-item
-            variant="text"
-            class="margin-top"
-          />
-          <el-skeleton-item
-            variant="text"
-            class="margin-top"
-          />
+          <el-skeleton-item variant="text" class="margin-top" />
+          <el-skeleton-item variant="text" class="margin-top" />
+          <el-skeleton-item variant="text" class="margin-top" />
         </div>
       </el-card>
     </template>
     <template #default>
       <el-card
         class="chart-item-container"
-        :body-style="{padding: 0}"
+        :body-style="{ padding: 0 }"
         shadow="never"
       >
         <template #header>
@@ -37,11 +22,7 @@
             全年销售额分析图（数据为模拟，只为演示效果）
           </div>
         </template>
-        <div
-          ref="fullYearSalesChart"
-          class="chart-item"
-        >
-        </div>
+        <div ref="fullYearSalesChart" class="chart-item"></div>
       </el-card>
     </template>
   </el-skeleton>
@@ -72,10 +53,21 @@ const months = [
   "十二月",
 ];
 function getData() {
-  const data: number[] = [];
-  while (data.length < months.length) {
-    data.push(random(100, 150));
-  }
+  var data: number[] = [];
+  // while (data.length < months.length) {
+  //   // data.push(random(100, 150));
+  //   data.push(150);
+  // }
+  data = [90, 70, 50, 93, 88, 96, 83, 75, 90, 110, 98, 100];
+  return data;
+}
+function getData1() {
+  var data: number[] = [];
+  // while (data.length < months.length) {
+  //   // data.push(random(100, 150));
+  //   data.push(150);
+  // }
+  data = [50, 70, 50, 93, 88, 96, 83, 75, 90, 100, 58, 100];
   return data;
 }
 export default defineComponent({
@@ -95,7 +87,7 @@ export default defineComponent({
           containLabel: true,
         },
         legend: {
-          data: ["2020全年销售额"],
+          data: ["2020全年销售额", "2021全年销售额"],
         },
         tooltip: {
           trigger: "axis",
@@ -106,13 +98,13 @@ export default defineComponent({
         },
         yAxis: {
           type: "value",
-          max: 200,
+          // max: 200,
         },
         series: [
           {
-            type: "bar",
+            type: "line",
             name: "2020全年销售额",
-            stack: "总量",
+            // stack: "总量",
             data: getData(),
             label: {
               show: true,
@@ -123,7 +115,26 @@ export default defineComponent({
             itemStyle: {
               color: new graphic.LinearGradient(0, 0, 0, 1, [
                 { offset: 0, color: "#83bff6" },
-                { offset: 0.5, color: "#188df0" },
+                // { offset: 0.5, color: "#188df0" },
+                { offset: 1, color: "#188df0" },
+              ]),
+            },
+          },
+          {
+            type: "line",
+            name: "2021全年销售额",
+            // stack: "总量",
+            data: getData1(),
+            label: {
+              show: true,
+              formatter(val: any) {
+                return val.data + "万";
+              },
+            },
+            itemStyle: {
+              color: new graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: "#83bff6" },
+                // { offset: 0.5, color: "#188df0" },
                 { offset: 1, color: "#188df0" },
               ]),
             },
@@ -137,18 +148,18 @@ export default defineComponent({
             option
           )
         );
-        interval = setInterval(() => {
-          const option = {
-            series: [
-              {
-                data: getData(),
-              },
-            ],
-          };
-          useEcharts(fullYearSalesChart.value as HTMLDivElement).setOption(
-            option
-          );
-        }, 5000);
+        // interval = setInterval(() => {
+        //   const option = {
+        //     series: [
+        //       {
+        //         data: getData(),
+        //       },
+        //     ],
+        //   };
+        //   useEcharts(fullYearSalesChart.value as HTMLDivElement).setOption(
+        //     option
+        //   );
+        // }, 5000);
       }, 1000);
     };
     const updateChart = () => {

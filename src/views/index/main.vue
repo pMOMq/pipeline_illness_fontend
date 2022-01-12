@@ -10,34 +10,25 @@
         class="item-wrapper"
       >
         <DataItem :data-model="item">
-          <template
-            v-if="index === 0"
-            #extra="{ extra }"
-          >
+          <template v-if="index === 0" #extra="{ extra }">
             <div class="margin-top-lg">
               <div>
                 较昨日新增：{{ extra.data }}
                 <i class="el-icon-caret-top text-green"></i>
               </div>
-              <div class=" margin-top-sm">
+              <div class="margin-top-sm">
                 较上周新增：{{ extra.data1 }}
                 <i class="el-icon-caret-top text-blue"></i>
               </div>
             </div>
           </template>
-          <template
-            v-else-if="index === 1"
-            #extra="{ extra }"
-          >
-            <div
-              class="margin-top"
-              style="position: relative"
-            >
+          <template v-else-if="index === 1" #extra="{ extra }">
+            <div class="margin-top" style="position: relative">
               <div>
                 较昨日新增：{{ extra.data }}
                 <i class="el-icon-caret-top text-green"></i>
               </div>
-              <div class=" margin-top-sm">
+              <div class="margin-top-sm">
                 较上周新增：{{ extra.data1 }}
                 <i class="el-icon-caret-top text-blue"></i>
               </div>
@@ -46,10 +37,7 @@
               </div>
             </div>
           </template>
-          <template
-            v-else-if="index === 2"
-            #extra="{ extra }"
-          >
+          <template v-else-if="index === 2" #extra="{ extra }">
             <el-progress
               :text-inside="true"
               :stroke-width="15"
@@ -57,59 +45,82 @@
               status="exception"
             />
           </template>
-          <template
-            v-else-if="index === 3"
-            #extra
-          >
+          <template v-else-if="index === 3" #extra>
             <OrderChart ref="mOrderChart" />
           </template>
         </DataItem>
       </el-col>
     </el-row>
-    <el-row
-      :gutter="5"
-      class="margin-top-sm"
-    >
+    <el-row :gutter="5">
+      <el-col :xs="24" :sm="12" :md="6" class="item-wrapper">
+        <el-select
+          v-model="value"
+          class="m-2"
+          placeholder="Select"
+          size="large"
+          @click="getYears"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="6" class="item-wrapper">
+        <el-select
+          v-model="value"
+          class="m-2"
+          placeholder="Select"
+          size="large"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="6" class="item-wrapper">
+        <el-select
+          v-model="value"
+          class="m-2"
+          placeholder="Select"
+          size="large"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-col>
+    </el-row>
+    <el-row :gutter="5" class="margin-top-sm">
       <el-col :span="24">
         <FullYearSalesChart ref="fullYearSalesChart" />
       </el-col>
     </el-row>
-    <el-row
-      :gutter="5"
-      class="margin-top-sm"
-    >
-      <el-col
-        :xs="24"
-        :sm="24"
-        :md="6"
-      >
+    <el-row :gutter="5" class="margin-top-sm">
+      <el-col :xs="24" :sm="24" :md="6">
         <div class="flex flex-direction">
           <SalesChart ref="salesChart" />
-          <StudentChart
-            ref="studentChart"
-            class="margin-top-xs"
-          />
+          <StudentChart ref="studentChart" class="margin-top-xs" />
         </div>
       </el-col>
-      <el-col
-        :xs="24"
-        :sm="24"
-        :md="12"
-        class="map-margin-tb"
-      >
+      <el-col :xs="24" :sm="24" :md="12" class="map-margin-tb">
         <SchoolChart ref="schoolChart" />
       </el-col>
-      <el-col
-        :xs="24"
-        :sm="24"
-        :md="6"
-      >
+      <el-col :xs="24" :sm="24" :md="6">
         <div class="flex flex-direction">
           <EnrollmentChannelsChart ref="enrollmentChannelsChart" />
-          <DepartmentChart
-            ref="departmentChart"
-            class="margin-top-xs"
-          />
+          <DepartmentChart ref="departmentChart" class="margin-top-xs" />
         </div>
       </el-col>
     </el-row>
@@ -125,6 +136,7 @@ import EnrollmentChannelsChart from "./components/chart/EnrollmentChannelsChart.
 import DepartmentChart from "./components/chart/DepartmentChart.vue";
 import SchoolChart from "./components/chart/SchoolChart.vue";
 import FullYearSalesChart from "./components/chart/FullYearSalesChart.vue";
+
 import {
   computed,
   defineComponent,
@@ -133,6 +145,10 @@ import {
   watch,
 } from "@vue/runtime-core";
 import { useLayoutStore } from "@/layouts/hooks";
+import { get, Response } from "@/api/http";
+import { getYear } from "@/api/url";
+import { ElMessage } from "element-plus";
+
 export default defineComponent({
   name: "Home",
   components: {
@@ -146,6 +162,8 @@ export default defineComponent({
     FullYearSalesChart,
   },
   setup() {
+    // const value = ref('')
+
     const layoutStore = useLayoutStore();
     const mOrderChart = ref<InstanceType<typeof OrderChart>>();
     const salesChart = ref<InstanceType<typeof SalesChart>>();
@@ -166,6 +184,19 @@ export default defineComponent({
         fullYearSalesChart.value?.updateChart();
       }, 500);
     };
+     const getYears = () => {
+      get({
+        url: getYear,
+        data: {
+        },
+      })
+        .then(({ data }: Response) => {
+          console.log(data)
+        })
+        .catch((error) => {
+          ElMessage.error(error.message);
+        });
+    };
     const collapse = computed(() => {
       return layoutStore.state.isCollapse;
     });
@@ -181,6 +212,13 @@ export default defineComponent({
       schoolChart,
       studentChart,
       fullYearSalesChart,
+      getYears,
+      options: [
+        {
+          value: "Option1",
+          label: "Option1",
+        },
+      ],
       dataList: [
         {
           title: "今日访问量",
@@ -212,7 +250,7 @@ export default defineComponent({
           },
         },
         {
-          title: "当月订单量",
+          title: "在线人数",
           data: "189笔",
           bottomTitle: "累计订单量",
           totalSum: "1万+",
